@@ -7,7 +7,30 @@ A modern Ruby on Rails 8 application with PostgreSQL database, fully containeriz
 - Docker (version 20.10 or higher)
 - Docker Compose V2 (included with Docker Desktop or Docker Engine 20.10+)
 
-**Note:** This guide uses the `docker compose` command (Docker Compose V2). If you're using the older standalone version, replace `docker compose` with `docker compose` (with hyphen) in all commands.
+**Note:** This guide uses the `docker compose` command (Docker Compose V2). If you're using the older standalone version, replace `docker compose` with `docker-compose` (with hyphen) in all commands.
+
+## Quick Start
+
+Get up and running in under 5 minutes:
+
+```bash
+# Clone the repository
+git clone <repository-url>
+cd pilotts
+
+# Run the quick start script
+./start.sh
+```
+
+Or manually:
+
+```bash
+docker compose build
+docker compose run --rm web bin/rails db:create db:migrate
+docker compose up
+```
+
+Visit http://localhost:3000 to see your app running!
 
 ## Tech Stack
 
@@ -194,6 +217,32 @@ docker compose restart web
    ```bash
    docker compose run --rm web bin/rails test
    ```
+
+## Project Structure
+
+```
+pilotts/
+├── app/                    # Application code
+│   ├── controllers/        # Request handlers
+│   ├── models/             # Database models
+│   ├── views/              # View templates
+│   ├── jobs/               # Background jobs
+│   ├── mailers/            # Email templates
+│   └── assets/             # CSS, images
+├── bin/                    # Executable scripts
+├── config/                 # Application configuration
+│   ├── database.yml        # Database configuration
+│   ├── routes.rb           # URL routing
+│   └── environments/       # Environment-specific settings
+├── db/                     # Database files
+│   ├── migrate/            # Database migrations
+│   └── seeds.rb            # Seed data
+├── test/                   # Test files
+├── docker compose.yml      # Docker services configuration
+├── Dockerfile              # Production Docker image
+├── Dockerfile.dev          # Development Docker image
+└── README.md               # This file
+```
 
 ## Troubleshooting
 
