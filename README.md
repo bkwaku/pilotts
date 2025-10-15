@@ -5,7 +5,9 @@ A modern Ruby on Rails 8 application with PostgreSQL database, fully containeriz
 ## Prerequisites
 
 - Docker (version 20.10 or higher)
-- Docker Compose (version 2.0 or higher)
+- Docker Compose V2 (included with Docker Desktop or Docker Engine 20.10+)
+
+**Note:** This guide uses the `docker compose` command (Docker Compose V2). If you're using the older standalone version, replace `docker compose` with `docker compose` (with hyphen) in all commands.
 
 ## Tech Stack
 
@@ -24,28 +26,37 @@ git clone <repository-url>
 cd pilotts
 ```
 
-### 2. Build Docker Containers
+### 2. Environment Configuration (Optional)
+
+The application comes with sensible defaults in `docker compose.yml`. If you want to customize settings, create a `.env` file:
+
+```bash
+cp .env.example .env
+# Edit .env with your preferred settings
+```
+
+### 3. Build Docker Containers
 
 Build the Docker images for the first time:
 
 ```bash
-docker-compose build
+docker compose build
 ```
 
-### 3. Set Up the Database
+### 4. Set Up the Database
 
 Create and migrate the database:
 
 ```bash
-docker-compose run --rm web bin/rails db:create db:migrate
+docker compose run --rm web bin/rails db:create db:migrate
 ```
 
-### 4. Start the Application
+### 5. Start the Application
 
 Start all services (web server and database):
 
 ```bash
-docker-compose up
+docker compose up
 ```
 
 The application will be available at http://localhost:3000
@@ -53,7 +64,7 @@ The application will be available at http://localhost:3000
 To run in detached mode (background):
 
 ```bash
-docker-compose up -d
+docker compose up -d
 ```
 
 ## Common Docker Commands
@@ -64,25 +75,25 @@ Run any Rails command inside the container:
 
 ```bash
 # Generate a model
-docker-compose run --rm web bin/rails generate model Article title:string body:text
+docker compose run --rm web bin/rails generate model Article title:string body:text
 
 # Run migrations
-docker-compose run --rm web bin/rails db:migrate
+docker compose run --rm web bin/rails db:migrate
 
 # Rollback migration
-docker-compose run --rm web bin/rails db:rollback
+docker compose run --rm web bin/rails db:rollback
 
 # Run seeds
-docker-compose run --rm web bin/rails db:seed
+docker compose run --rm web bin/rails db:seed
 
 # Open Rails console
-docker-compose run --rm web bin/rails console
+docker compose run --rm web bin/rails console
 
 # Run tests
-docker-compose run --rm web bin/rails test
+docker compose run --rm web bin/rails test
 
 # Run a specific test file
-docker-compose run --rm web bin/rails test test/models/article_test.rb
+docker compose run --rm web bin/rails test test/models/article_test.rb
 ```
 
 ### Accessing the Rails Console
@@ -90,7 +101,7 @@ docker-compose run --rm web bin/rails test test/models/article_test.rb
 Enter the Rails console for debugging and interacting with your application:
 
 ```bash
-docker-compose run --rm web bin/rails console
+docker compose run --rm web bin/rails console
 ```
 
 ### Accessing the Shell
@@ -98,59 +109,59 @@ docker-compose run --rm web bin/rails console
 Enter the container shell (bash):
 
 ```bash
-docker-compose exec web bash
+docker compose exec web bash
 ```
 
 Or if the containers aren't running:
 
 ```bash
-docker-compose run --rm web bash
+docker compose run --rm web bash
 ```
 
 ### Database Management
 
 ```bash
 # Access PostgreSQL console
-docker-compose exec db psql -U postgres -d pilotts_development
+docker compose exec db psql -U postgres -d pilotts_development
 
 # Create database
-docker-compose run --rm web bin/rails db:create
+docker compose run --rm web bin/rails db:create
 
 # Drop database
-docker-compose run --rm web bin/rails db:drop
+docker compose run --rm web bin/rails db:drop
 
 # Reset database (drop, create, migrate, seed)
-docker-compose run --rm web bin/rails db:reset
+docker compose run --rm web bin/rails db:reset
 
 # Check database migration status
-docker-compose run --rm web bin/rails db:migrate:status
+docker compose run --rm web bin/rails db:migrate:status
 ```
 
 ### Managing Containers
 
 ```bash
 # View running containers
-docker-compose ps
+docker compose ps
 
 # View logs
-docker-compose logs
+docker compose logs
 
 # View logs for specific service
-docker-compose logs web
-docker-compose logs db
+docker compose logs web
+docker compose logs db
 
 # Follow logs in real-time
-docker-compose logs -f web
+docker compose logs -f web
 
 # Stop all containers
-docker-compose down
+docker compose down
 
 # Stop and remove all containers, networks, and volumes
-docker-compose down -v
+docker compose down -v
 
 # Rebuild containers (useful after Gemfile changes)
-docker-compose build --no-cache
-docker-compose up
+docker compose build --no-cache
+docker compose up
 ```
 
 ### Installing New Gems
@@ -159,17 +170,17 @@ After adding a gem to the Gemfile:
 
 ```bash
 # Rebuild the web container
-docker-compose build web
+docker compose build web
 
 # Restart the services
-docker-compose up
+docker compose up
 ```
 
 Or run bundle install directly:
 
 ```bash
-docker-compose run --rm web bundle install
-docker-compose restart web
+docker compose run --rm web bundle install
+docker compose restart web
 ```
 
 ## Development Workflow
@@ -177,11 +188,11 @@ docker-compose restart web
 1. **Make code changes** - Files are mounted as volumes, so changes appear immediately
 2. **Restart server if needed** - Most changes are auto-reloaded, but some require restart:
    ```bash
-   docker-compose restart web
+   docker compose restart web
    ```
 3. **Run tests** - Always test your changes:
    ```bash
-   docker-compose run --rm web bin/rails test
+   docker compose run --rm web bin/rails test
    ```
 
 ## Troubleshooting
@@ -191,7 +202,7 @@ docker-compose restart web
 If port 3000 or 5432 is already in use:
 
 ```bash
-# Stop the conflicting service or change ports in docker-compose.yml
+# Stop the conflicting service or change ports in docker compose.yml
 # For example, change "3000:3000" to "3001:3000"
 ```
 
@@ -208,19 +219,19 @@ sudo chown -R $USER:$USER .
 
 ```bash
 # Remove all containers and volumes, then rebuild
-docker-compose down -v
-docker-compose build --no-cache
-docker-compose up
+docker compose down -v
+docker compose build --no-cache
+docker compose up
 ```
 
 ### Database Connection Errors
 
 ```bash
 # Wait for PostgreSQL to be ready
-docker-compose up -d db
+docker compose up -d db
 sleep 10
-docker-compose run --rm web bin/rails db:create db:migrate
-docker-compose up
+docker compose run --rm web bin/rails db:create db:migrate
+docker compose up
 ```
 
 ## Production Deployment
