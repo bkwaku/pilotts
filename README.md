@@ -30,6 +30,17 @@ docker compose run --rm web bin/rails db:create db:migrate
 docker compose up
 ```
 
+**Using Make (Optional):**
+If you have `make` installed, you can use convenient shortcuts:
+
+```bash
+make build      # Build Docker images
+make db-setup   # Set up database
+make up         # Start application
+```
+
+See `make help` for all available commands.
+
 Visit http://localhost:3000 to see your app running!
 
 ## Tech Stack
