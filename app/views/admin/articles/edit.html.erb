@@ -1,0 +1,11 @@
+<% content_for :title, @article.persisted? ? "Edit Article" : "New Article" %>
+
+<div 
+  id="minimalist-editor-root"
+  data-article-id="<%= @article.id %>"
+  data-initial-title="<%= @article.title %>"
+  data-initial-body="<%= h(@article.html_body) %>"
+  data-autosave-url="<%= autosave_admin_article_path(@article) if @article.persisted? %>"
+></div>
+
+<%= javascript_import_module_tag "minimalist-editor" %>

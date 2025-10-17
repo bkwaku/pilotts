@@ -15,6 +15,13 @@ services:
       timeout: 5s
       retries: 5
 
+  mailcatcher:
+    image: sj26/mailcatcher:latest
+    ports:
+      - "1080:1080"  # Web interface
+      - "1025:1025"  # SMTP port
+    restart: unless-stopped
+
   web:
     build:
       context: .
@@ -28,9 +35,18 @@ services:
     environment:
       DATABASE_URL: postgresql://postgres:postgres@db:5432/pilotts_development
       RAILS_ENV: development
+      SMTP_ADDRESS: mailcatcher
+      SMTP_PORT: 1025
+      SMTP_DOMAIN: localhost
+      SMTP_AUTHENTICATION: plain
+      SMTP_ENABLE_STARTTLS_AUTO: "false"
+      MAILER_FROM_EMAIL: noreply@pilotts.com
+      MAILER_DEFAULT_HOST: localhost:3000
     depends_on:
       db:
         condition: service_healthy
+      mailcatcher:
+        condition: service_started
     stdin_open: true
     tty: true
 

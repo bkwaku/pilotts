@@ -1,0 +1,145 @@
+<% content_for :title, "Articles" %>
+
+<div class="admin-feed-container">
+  <div class="admin-feed-header">
+    <div>
+      <h1 class="admin-feed-title">Stories</h1>
+      <p class="admin-feed-subtitle">Manage your content</p>
+    </div>
+    <%= link_to new_admin_article_path, class: "new-article-btn" do %>
+      <i class="fas fa-pen"></i> Write
+    <% end %>
+  </div>
+
+  <!-- Filter Tabs -->
+  <div class="admin-filter-tabs">
+    <%= link_to admin_articles_path(filter: "all"), 
+        class: "admin-filter-tab #{'active' if @filter == 'all'}" do %>
+      All <span class="tab-count"><%= @stats[:published] + @stats[:drafts] + @stats[:archived] %></span>
+    <% end %>
+    
+    <%= link_to admin_articles_path(filter: "published"), 
+        class: "admin-filter-tab #{'active' if @filter == 'published'}" do %>
+      Published <span class="tab-count"><%= @stats[:published] %></span>
+    <% end %>
+    
+    <%= link_to admin_articles_path(filter: "drafts"), 
+        class: "admin-filter-tab #{'active' if @filter == 'drafts'}" do %>
+      Drafts <span class="tab-count"><%= @stats[:drafts] %></span>
+    <% end %>
+    
+    <%= link_to admin_articles_path(filter: "archived"), 
+        class: "admin-filter-tab #{'active' if @filter == 'archived'}" do %>
+      Archived <span class="tab-count"><%= @stats[:archived] %></span>
+    <% end %>
+  </div>
+
+  <!-- Articles Feed -->
+  <div class="admin-articles-feed">
+    <% if @articles.any? %>
+      <% @articles.each do |article| %>
+        <div class="admin-article-wrapper">
+          <%= link_to edit_admin_article_path(article), class: "admin-article-card-link" do %>
+            <article class="admin-article-card">
+              <div class="admin-article-header">
+                <h2 class="admin-article-title"><%= article.title %></h2>
+                <span class="admin-status-badge status-<%= article.status.downcase %>">
+                  <%= article.status.capitalize %>
+                </span>
+              </div>
+              
+              <% if article.html_body.present? %>
+                <p class="admin-article-excerpt">
+                  <%= article.excerpt %>
+                </p>
+              <% else %>
+                <p class="admin-article-excerpt empty">
+                  Start writing your story...
+                </p>
+              <% end %>
+
+              <div class="admin-article-meta">
+                <span class="admin-meta-item">
+                  <%= article.updated_at.strftime("%b %d, %Y") %>
+                </span>
+                <span class="admin-meta-item">
+                  <%= article.reading_time %>
+                </span>
+              </div>
+            </article>
+          <% end %>
+          
+          <div class="admin-article-actions">
+            <% if article.published? %>
+              <%= button_to toggle_status_admin_article_path(article), 
+                  method: :patch,
+                  class: "admin-action-btn admin-unpublish-btn",
+                  title: "Move to Drafts",
+                  form: { data: { turbo: false } } do %>
+                <i class="fas fa-eye-slash"></i>
+                <span>Unpublish</span>
+              <% end %>
+            <% elsif article.status == "draft" %>
+              <%= button_to toggle_status_admin_article_path(article), 
+                  method: :patch,
+                  class: "admin-action-btn admin-publish-btn",
+                  title: "Publish",
+                  form: { data: { turbo: false } } do %>
+                <i class="fas fa-check"></i>
+                <span>Publish</span>
+              <% end %>
+            <% end %>
+            
+            <% if article.archived? %>
+              <%= button_to archive_admin_article_path(article), 
+                  method: :patch,
+                  class: "admin-action-btn admin-unarchive-btn",
+                  title: "Restore from Archive",
+                  form: { data: { turbo: false } } do %>
+                <i class="fas fa-box-open"></i>
+                <span>Restore</span>
+              <% end %>
+            <% else %>
+              <%= button_to archive_admin_article_path(article), 
+                  method: :patch,
+                  class: "admin-action-btn admin-archive-btn",
+                  title: "Archive",
+                  form: { data: { turbo: false } } do %>
+                <i class="fas fa-archive"></i>
+                <span>Archive</span>
+              <% end %>
+            <% end %>
+            
+            <%= button_to admin_article_path(article), 
+                method: :delete,
+                class: "admin-action-btn admin-delete-btn",
+                title: "Delete",
+                form: { data: { turbo_confirm: "Are you sure you want to delete this article?", turbo: false } } do %>
+              <i class="fas fa-trash"></i>
+              <span>Delete</span>
+            <% end %>
+          </div>
+        </div>
+      <% end %>
+    <% else %>
+      <div class="admin-empty-state">
+        <div class="admin-empty-icon">
+          <i class="fas fa-pen-alt"></i>
+        </div>
+        <h2>No stories found</h2>
+        <p>
+          <% if params[:search].present? %>
+            No stories match your search for "<%= params[:search] %>".
+          <% elsif @filter != "all" %>
+            You don't have any <%= @filter %> stories yet.
+          <% else %>
+            Start writing your first story.
+          <% end %>
+        </p>
+        <%= link_to new_admin_article_path, class: "new-article-btn" do %>
+          <i class="fas fa-pen"></i> Write Your First Story
+        <% end %>
+      </div>
+    <% end %>
+  </div>
+</div>

@@ -1,0 +1,30 @@
+/* Landing Page Styles */
+
+/* Footer */
+.footer {
+  background-color: var(--bg-color);
+  border-top: 1px solid var(--border-color);
+  padding: 2rem 0;
+  margin-top: 4rem;
+}
+
+.footer-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 2rem;
+  text-align: center;
+}
+
+.footer-text {
+  color: var(--text-secondary);
+  font-size: 0.9rem;
+  margin: 0;
+  font-family: var(--font-family);
+  font-weight: var(--font-weight-normal);
+}
+
+.footer-brand {
+  color: var(--accent-color);
+  font-weight: var(--font-weight-semibold);
+  letter-spacing: -0.01em;
+}

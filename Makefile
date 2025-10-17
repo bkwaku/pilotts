@@ -36,6 +36,27 @@ test: ## Run tests
 test-system: ## Run system tests
 	docker compose run --rm web bin/rails test:system
 
+rspec: ## Run RSpec tests
+	docker compose run --rm web bundle exec rspec
+
+rspec-verbose: ## Run RSpec tests with documentation format
+	docker compose run --rm web bundle exec rspec --format documentation
+
+rspec-coverage: ## Run RSpec tests with coverage report
+	docker compose run --rm web bundle exec rspec
+	@echo "Coverage report generated at coverage/index.html"
+
+test-setup: ## Setup test database
+	docker compose up -d db
+	@echo "Waiting for database..."
+	@sleep 5
+	docker compose run --rm web bin/rails db:drop RAILS_ENV=test || true
+	docker compose run --rm web bin/rails db:create RAILS_ENV=test
+	docker compose run --rm web bin/rails db:migrate RAILS_ENV=test
+	@echo "Test database ready!"
+
+test-full: test-setup rspec ## Setup database and run tests
+
 clean: ## Stop services and remove volumes
 	docker compose down -v
 

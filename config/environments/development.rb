@@ -31,14 +31,40 @@ Rails.application.configure do
   # Store uploaded files on the local file system (see config/storage.yml for options).
   config.active_storage.service = :local
 
-  # Don't care if the mailer can't send.
-  config.action_mailer.raise_delivery_errors = false
+  # Configure ActionMailer for development
+  config.action_mailer.raise_delivery_errors = true
+  config.action_mailer.perform_deliveries = true
+  config.action_mailer.delivery_method = :smtp
+
+  # SMTP configuration - using environment variables
+  smtp_settings = {
+    address: ENV.fetch("SMTP_ADDRESS", "mailcatcher"),
+    port: ENV.fetch("SMTP_PORT", 1025).to_i,
+    domain: ENV.fetch("SMTP_DOMAIN", "localhost"),
+    enable_starttls_auto: ENV.fetch("SMTP_ENABLE_STARTTLS_AUTO", "false") == "true"
+  }
+
+  # Only add authentication if credentials are provided
+  if ENV["SMTP_USER_NAME"].present?
+    smtp_settings[:user_name] = ENV["SMTP_USER_NAME"]
+    smtp_settings[:password] = ENV["SMTP_PASSWORD"]
+    smtp_settings[:authentication] = ENV.fetch("SMTP_AUTHENTICATION", "plain").to_sym
+  end
+
+  config.action_mailer.smtp_settings = smtp_settings
 
   # Make template changes take effect immediately.
   config.action_mailer.perform_caching = false
 
   # Set localhost to be used by links generated in mailer templates.
-  config.action_mailer.default_url_options = { host: "localhost", port: 3000 }
+  config.action_mailer.default_url_options = { 
+    host: ENV.fetch("MAILER_DEFAULT_HOST", "localhost:3000")
+  }
+  
+  # Default from email
+  config.action_mailer.default_options = {
+    from: ENV.fetch("MAILER_FROM_EMAIL", "noreply@pilotts.com")
+  }
 
   # Print deprecation notices to the Rails logger.
   config.active_support.deprecation = :log

@@ -1,0 +1,75 @@
+<% content_for :title, "Settings" %>
+
+<div class="admin-feed-container">
+  <div class="admin-feed-header">
+    <div>
+      <h1 class="admin-feed-title">Settings</h1>
+      <p class="admin-feed-subtitle">Configure your blog</p>
+    </div>
+  </div>
+
+  <%= form_with model: @setting, url: admin_settings_path, local: true, class: "settings-form-minimal" do |form| %>
+    <div class="settings-content">
+      <div class="settings-section-minimal">
+        <h3 class="settings-section-title">Blog Configuration</h3>
+        
+        <div class="form-field-minimal">
+          <%= form.label :blog_name, "Blog Name", class: "field-label-minimal" %>
+          <%= form.text_field :blog_name, 
+                class: "field-input-minimal", 
+                placeholder: "My Blog",
+                required: true %>
+          <small class="field-help-minimal">This will appear as your site title and in the navigation.</small>
+        </div>
+      </div>
+
+      <div class="settings-section-minimal">
+        <h3 class="settings-section-title">Contact Information</h3>
+        
+        <div class="form-field-minimal">
+          <%= form.label :contact_email, "Contact Email", class: "field-label-minimal" %>
+          <%= form.email_field :contact_email, 
+                class: "field-input-minimal", 
+                placeholder: "your@email.com",
+                required: true %>
+          <small class="field-help-minimal">This email will receive messages from the contact form.</small>
+        </div>
+      </div>
+
+      <div class="settings-section-minimal">
+        <h3 class="settings-section-title">Social Media</h3>
+        
+        <div class="form-field-minimal">
+          <%= form.label :twitter_url, "Twitter URL", class: "field-label-minimal" %>
+          <%= form.url_field :twitter_url, 
+                class: "field-input-minimal", 
+                placeholder: "https://twitter.com/yourusername" %>
+        </div>
+
+        <div class="form-field-minimal">
+          <%= form.label :linkedin_url, "LinkedIn URL", class: "field-label-minimal" %>
+          <%= form.url_field :linkedin_url, 
+                class: "field-input-minimal", 
+                placeholder: "https://linkedin.com/in/yourusername" %>
+        </div>
+      </div>
+
+      <div class="settings-section-minimal">
+        <h3 class="settings-section-title">About/Bio</h3>
+        
+        <div class="form-field-minimal">
+          <%= form.label :bio, "Your Bio", class: "field-label-minimal" %>
+          <%= form.text_area :bio, 
+                class: "field-textarea-minimal",
+                rows: 6,
+                placeholder: "Write a brief bio about yourself..." %>
+          <small class="field-help-minimal">This will appear on your About page.</small>
+        </div>
+      </div>
+
+      <div class="form-actions-minimal">
+        <%= form.submit "Save Changes", class: "save-settings-btn" %>
+      </div>
+    </div>
+  <% end %>
+</div>

@@ -1,0 +1,36 @@
+<nav class="navbar">
+  <div class="nav-container">
+    <%= link_to admin_root_path, class: "nav-logo" do %>
+      <i class="fas fa-paper-plane" style="color: #1A8917; font-size: 1.25rem;"></i>
+      <h2><%= Setting.current.blog_name %></h2>
+    <% end %>
+    
+    <div class="nav-menu">
+      <%= link_to "Stories", admin_articles_path, class: "nav-link" %>
+      <%= link_to "Settings", admin_settings_path, class: "nav-link" %>
+      <%= link_to "View Site", root_path, class: "nav-link", target: "_blank" %>
+      
+      <% if controller_name == 'articles' && (action_name == 'edit' || action_name == 'new') %>
+        <span class="save-status-indicator" id="save-status-indicator">Saved</span>
+        
+        <% if @article&.persisted? %>
+          <button class="publish-btn <%= 'published' if @article.published? %>" id="publish-btn">
+            <i class="fas fa-<%= @article.published? ? 'check' : 'upload' %>"></i>
+            <%= @article.published? ? 'Published' : 'Publish' %>
+          </button>
+        <% else %>
+          <button class="publish-btn" id="publish-btn">
+            <i class="fas fa-upload"></i>
+            Publish
+          </button>
+        <% end %>
+      <% end %>
+      
+      <div class="admin-user-menu">
+        <div class="admin-user-avatar">
+          <%= current_user.email_address.first.upcase %>
+        </div>
+      </div>
+    </div>
+  </div>
+</nav>

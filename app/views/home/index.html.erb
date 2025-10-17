@@ -1,0 +1,45 @@
+<% setting = Setting.current %>
+<% content_for :title, setting.blog_name %>
+
+<div class="hero-section">
+  <h1>Welcome!</h1>
+  <p class="hero-description">
+    Thoughts, stories, and insights on technology, programming, and life.
+  </p>
+</div>
+
+<% if @articles_by_year.any? %>
+  <% @articles_by_year.each do |year, articles| %>
+    <div class="year-section">
+      <h2 class="year-header"><%= year %></h2>
+      
+      <% articles.each do |article| %>
+        <%= link_to article_path(article), class: "article-card-link" do %>
+          <article class="article-card">
+            <div class="article-meta">
+              <%= article.published_at&.strftime("%B %d, %Y") || article.created_at.strftime("%B %d, %Y") %>
+              <span class="reading-time"> · <%= article.reading_time %></span>
+            </div>
+            
+            <h3 class="article-title"><%= article.title %></h3>
+            
+            <div class="article-excerpt">
+              <%= article.excerpt %>
+            </div>
+          </article>
+        <% end %>
+      <% end %>
+    </div>
+  <% end %>
+
+  <% if @articles.respond_to?(:current_page) %>
+    <div class="pagination-wrapper">
+      <%= paginate @articles %>
+    </div>
+  <% end %>
+<% else %>
+  <div class="empty-state">
+    <h2>No articles published yet</h2>
+    <p>Check back soon for new content!</p>
+  </div>
+<% end %>

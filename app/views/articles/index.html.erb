@@ -1,0 +1,41 @@
+<% content_for :title, "All Articles" %>
+
+<div class="feed-header">
+  <h1 class="feed-title">Recent Stories</h1>
+</div>
+
+<div class="articles-feed">
+  <% if @articles_by_year.any? %>
+    <% @articles_by_year.each do |year, articles| %>
+      <% articles.each do |article| %>
+        <%= link_to article_path(article), class: "article-card-link" do %>
+          <article class="article-card">
+            <h2 class="article-title"><%= article.title %></h2>
+            
+            <p class="article-excerpt">
+              <%= article.excerpt || "This is a short summary of the article content, designed to draw the reader in with the key takeaway or a compelling hook." %>
+            </p>
+
+            <div class="article-meta">
+              <span class="article-meta-item">
+                <%= article.published_at&.strftime("%b %d") || article.created_at.strftime("%b %d") %>
+              </span>
+              <span class="read-time"><%= article.reading_time %></span>
+            </div>
+          </article>
+        <% end %>
+      <% end %>
+    <% end %>
+
+    <% if @articles.respond_to?(:current_page) %>
+      <div class="pagination-wrapper">
+        <%= paginate @articles %>
+      </div>
+    <% end %>
+  <% else %>
+    <div class="empty-state">
+      <h2>No articles published yet</h2>
+      <p>Check back soon for new content!</p>
+    </div>
+  <% end %>
+</div>

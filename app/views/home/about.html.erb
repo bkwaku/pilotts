@@ -1,0 +1,17 @@
+<% content_for :title, "About" %>
+
+<div class="about-page">
+  <h1>About</h1>
+
+  <div class="about-content">
+    <% if @setting&.bio.present? %>
+      <%= @setting.bio %>
+    <% else %>
+      <p>Welcome to my personal blog. This is where I share my thoughts, experiences, and insights on various topics including technology, programming, and life.</p>
+      
+      <p>I'm passionate about creating meaningful content and connecting with like-minded individuals who share similar interests.</p>
+      
+      <p>Feel free to <strong><%= link_to "get in touch", contact_path %></strong> if you'd like to connect or have any questions about my work.</p>
+    <% end %>
+  </div>
+</div>

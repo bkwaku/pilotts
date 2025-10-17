@@ -1,6 +1,17 @@
-# Pilotts - Ruby on Rails 8 Application
+# Pilotts - Open Source Personal Blog Platform
 
-A modern Ruby on Rails 8 application with PostgreSQL database, fully containerized with Docker for easy development and deployment.
+**An open source alternative to Medium for personal blogging.**
+
+Pilotts is a modern, self-hosted personal blog platform built with Ruby on Rails 8. It provides a clean, minimalist interface for writing and sharing your thoughts, stories, and insights without the constraints of centralized platforms.
+
+## Why Pilotts?
+
+- **Own Your Content**: Complete control over your writing and data
+- **Privacy First**: No tracking, no ads, no algorithmic timeline
+- **Clean Writing Experience**: Distraction-free editor with rich text formatting
+- **Customizable**: Configure your blog name, bio, and social links
+- **Self-Hosted**: Deploy on your own infrastructure
+- **Open Source**: MIT licensed, modify and extend as you wish
 
 ## Prerequisites
 
@@ -41,15 +52,22 @@ make up         # Start application
 
 See `make help` for all available commands.
 
-Visit http://localhost:3000 to see your app running!
+Visit http://localhost:3000 to see your blog running! 
+
+**What you'll get:**
+- A clean, responsive blog interface at the root URL
+- Admin dashboard at `/admin` (create account on first visit)
+- Settings page to customize your blog name and bio
+- Rich text editor for writing articles
 
 ## Tech Stack
 
-- **Ruby**: 3.2.3
-- **Rails**: 8.0.3
-- **Database**: PostgreSQL 16
-- **Asset Pipeline**: Propshaft
-- **JavaScript**: Importmap with Turbo and Stimulus (Hotwire)
+- **Backend**: Ruby 3.2.3 with Rails 8.0.3
+- **Database**: PostgreSQL 16 for reliable data storage
+- **Frontend**: Modern HTML/CSS with Turbo and Stimulus (Hotwire)
+- **Styling**: Custom CSS with Inter font family for clean typography
+- **Assets**: Propshaft for efficient asset management
+- **Containerization**: Docker and Docker Compose for easy deployment
 
 ## Getting Started with Docker
 
@@ -100,6 +118,78 @@ To run in detached mode (background):
 ```bash
 docker compose up -d
 ```
+
+## Testing
+
+Pilotts uses **RSpec** for testing with comprehensive test coverage.
+
+### Running Tests
+
+```bash
+# Run all tests
+docker compose run --rm web bundle exec rspec
+
+# Or use Make commands
+make rspec              # Run all tests
+make rspec-verbose      # Detailed output
+make rspec-coverage     # With coverage report
+
+# Run specific tests
+docker compose run --rm web bundle exec rspec spec/models
+docker compose run --rm web bundle exec rspec spec/models/article_spec.rb
+```
+
+### Test Coverage
+
+View coverage report after running tests:
+```bash
+open coverage/index.html
+```
+
+**Current Test Suite:**
+- ✅ Model tests (User, Article, Setting, Session)
+- ✅ Controller tests (Admin::Articles, Articles, Home)
+- ✅ Service object tests (ExcerptGeneration, ReadingTimeCalculator)
+- ✅ Mailer tests (TestMailer)
+- ✅ Factory definitions with FactoryBot
+- ✅ Authentication helpers
+
+📖 **Detailed testing guide**: See [docs/TESTING.md](docs/TESTING.md) for writing and running tests.
+
+## Email Configuration
+
+Pilotts includes built-in email support with easy configuration through environment variables.
+
+### Local Development (Mailcatcher)
+Emails are automatically captured by Mailcatcher in development:
+- **Web Interface**: http://localhost:1080
+- **SMTP Port**: 1025 (already configured)
+- All emails appear in the web interface - no additional setup needed!
+
+### Testing Email
+```bash
+# Open Rails console
+docker compose exec web bin/rails console
+
+# Send a test email
+TestMailer.test_email('test@example.com').deliver_now
+
+# Check http://localhost:1080 to see the email
+```
+
+### Production Setup
+Configure SMTP via environment variables in your `.env` file:
+
+```bash
+SMTP_ADDRESS=smtp.gmail.com
+SMTP_PORT=587
+SMTP_USER_NAME=your-email@gmail.com
+SMTP_PASSWORD=your-app-password
+SMTP_DOMAIN=yourdomain.com
+MAILER_FROM_EMAIL=noreply@yourdomain.com
+```
+
+📖 **Detailed guide**: See [docs/SMTP_SETUP.md](docs/SMTP_SETUP.md) for complete configuration options and provider-specific instructions.
 
 ## Common Docker Commands
 
@@ -308,11 +398,48 @@ docker run -d -p 80:80 \
 
 For production deployment, consider using [Kamal](https://kamal-deploy.org/) (included in the project) or other container orchestration platforms.
 
+## Contributing
+
+Pilotts is an open source project and we welcome contributions! Whether you're fixing bugs, adding features, or improving documentation, your help makes Pilotts better for everyone.
+
+### Ways to Contribute
+- 🐛 **Bug Reports**: Found an issue? Open a GitHub issue
+- 💡 **Feature Requests**: Have an idea? We'd love to hear it
+- 🔧 **Code Contributions**: Submit pull requests for fixes and features
+- 📚 **Documentation**: Help improve guides and documentation
+- 🎨 **Design**: Contribute to UI/UX improvements
+
+### Development Setup
+Follow the Quick Start guide above to get a local development environment running.
+
+## Roadmap
+
+Future enhancements planned for Pilotts:
+- 📊 Advanced analytics and reader insights
+- 🔍 Enhanced search and filtering
+- 📱 Progressive Web App (PWA) support
+- 🌐 Multi-language support
+- 📧 Email newsletter integration
+- 🔗 Webmention and IndieWeb support
+- 📚 Content categories and tags
+
 ## Additional Resources
 
+### Development & Deployment
 - [Ruby on Rails Guides](https://guides.rubyonrails.org/)
 - [Docker Documentation](https://docs.docker.com/)
 - [PostgreSQL Documentation](https://www.postgresql.org/docs/)
+- [Kamal Deployment Guide](https://kamal-deploy.org/)
+
+### Alternative Platforms
+- [Medium](https://medium.com/) - The platform Pilotts aims to replace
+- [Ghost](https://ghost.org/) - Another open source publishing platform
+- [WriteFreely](https://writefreely.org/) - Minimalist federated blogging platform
+
+### Self-Hosting Resources
+- [DigitalOcean App Platform](https://www.digitalocean.com/products/app-platform/)
+- [Heroku](https://www.heroku.com/) - Easy Rails deployment
+- [Railway](https://railway.app/) - Modern deployment platform
 
 ## License
 

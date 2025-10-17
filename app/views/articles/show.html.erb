@@ -1,0 +1,20 @@
+<% content_for :title, @article.title %>
+
+<article class="article-full">
+  <header class="article-header">
+    <div class="article-meta">
+      <%= @article.published_at&.strftime("%B %d, %Y") || @article.created_at.strftime("%B %d, %Y") %>
+      <span class="reading-time"> · <%= @article.reading_time %></span>
+    </div>
+    
+    <h1 class="article-title"><%= @article.title %></h1>
+  </header>
+
+  <div class="article-content">
+    <%= raw @article.html_body %>
+  </div>
+
+  <footer class="article-footer">
+    <%= link_to "← Back to Articles", articles_path, class: "back-link" %>
+  </footer>
+</article>

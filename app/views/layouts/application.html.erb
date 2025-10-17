@@ -1,7 +1,7 @@
 <!DOCTYPE html>
-<html>
+<html data-theme="light">
   <head>
-    <title><%= content_for(:title) || "Pilotts" %></title>
+    <title><%= content_for(:title) || Setting.current.blog_name %></title>
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="mobile-web-app-capable" content="yes">
@@ -10,18 +10,181 @@
 
     <%= yield :head %>
 
-    <%# Enable PWA manifest for installable apps (make sure to enable in config/routes.rb too!) %>
-    <%#= tag.link rel: "manifest", href: pwa_manifest_path(format: :json) %>
-
     <link rel="icon" href="/icon.png" type="image/png">
     <link rel="icon" href="/icon.svg" type="image/svg+xml">
     <link rel="apple-touch-icon" href="/icon.png">
 
+    <%# Add Font Awesome for icons %>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    
+    <%# Add Graphik font - using a similar high-quality alternative since Graphik is commercial %>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
     <%# Includes all stylesheet files in app/assets/stylesheets %>
     <%= stylesheet_link_tag :app, "data-turbo-track": "reload" %>
+    <%= javascript_importmap_tags %>
   </head>
 
-  <body>
-    <%= yield %>
+  <body data-theme="light" class="<%= 'admin-body' if controller.class.module_parent_name == 'Admin' %>">
+    <% if controller.class.module_parent_name == "Admin" %>
+      <%= render 'layouts/admin_header' %>
+    <% else %>
+      <nav class="navbar">
+        <div class="nav-container">
+          <%= link_to root_path, class: "nav-logo" do %>
+            <i class="fas fa-paper-plane" style="color: #1A8917; font-size: 1.25rem;"></i>
+            <h2><%= Setting.current.blog_name %></h2>
+          <% end %>
+          
+          <div class="nav-menu">
+            <%= link_to "About", about_path, class: "nav-link" %>
+            <%= link_to "Contact", contact_path, class: "nav-link" %>
+            <%= link_to "List", articles_path, class: "nav-link" %>
+            
+            <% setting = Setting.current %>
+            <% if setting.twitter_url.present? %>
+              <%= link_to setting.twitter_url, class: "nav-link social-link", target: "_blank", rel: "noopener" do %>
+                <i class="fab fa-twitter"></i>
+              <% end %>
+            <% end %>
+            
+            <% if setting.linkedin_url.present? %>
+              <%= link_to setting.linkedin_url, class: "nav-link social-link", target: "_blank", rel: "noopener" do %>
+                <i class="fab fa-linkedin"></i>
+              <% end %>
+            <% end %>
+            
+            <button id="search-toggle-btn" class="search-toggle-btn" style="border: none; background: none; padding: 0.5rem; cursor: pointer;">
+              <i class="fas fa-search" style="font-size: 1.125rem; color: #757575;"></i>
+            </button>
+          </div>
+        </div>
+        
+        <!-- Search Overlay -->
+        <div id="search-overlay" class="search-overlay" style="display: none;">
+          <div class="search-box-container">
+            <div class="search-input-wrapper">
+              <i class="fas fa-search" style="color: #757575; margin-right: 0.75rem;"></i>
+              <input type="text" id="search-input" class="search-input-field" placeholder="Search articles..." autocomplete="off">
+              <button id="search-close-btn" class="search-close-btn">
+                <i class="fas fa-times"></i>
+              </button>
+            </div>
+            <div id="search-results" class="search-results"></div>
+          </div>
+        </div>
+      </nav>
+    <% end %>
+
+    <main class="main-content <%= 'admin-main' if controller.class.module_parent_name == 'Admin' %>">
+      <% if notice && controller.class.module_parent_name != "Admin" %>
+        <div class="alert alert-success">
+          <%= notice %>
+        </div>
+      <% end %>
+      
+      <% if alert && controller.class.module_parent_name != "Admin" %>
+        <div class="alert alert-error">
+          <%= alert %>
+        </div>
+      <% end %>
+
+      <%= yield %>
+    </main>
+
+    <% if controller.class.module_parent_name == "Admin" %>
+      <%= render 'layouts/admin_footer' %>
+    <% else %>
+      <button type="button" class="floating-action-btn" id="ai-assistant-btn" title="AI Assistant">
+        <i class="fas fa-magic"></i>
+      </button>
+      
+      <footer class="footer">
+        <div class="footer-container">
+          <p class="footer-text">
+            Powered by <a target="_blank" href="https://github.com/bkwaku/pilotts"><span class="footer-brand">pilotts</span></a>
+          </p>
+        </div>
+      </footer>
+    <% end %>
+    
+    <% unless controller.class.module_parent_name == "Admin" %>
+      <script>
+        document.addEventListener('DOMContentLoaded', function() {
+          const searchToggleBtn = document.getElementById('search-toggle-btn');
+          const searchOverlay = document.getElementById('search-overlay');
+          const searchInput = document.getElementById('search-input');
+          const searchCloseBtn = document.getElementById('search-close-btn');
+          const searchResults = document.getElementById('search-results');
+          
+          if (!searchToggleBtn || !searchOverlay || !searchInput) return;
+          
+          // Open search overlay
+          searchToggleBtn.addEventListener('click', function() {
+            searchOverlay.style.display = 'flex';
+            setTimeout(() => searchInput.focus(), 100);
+          });
+          
+          // Close search overlay
+          function closeSearch() {
+            searchOverlay.style.display = 'none';
+            searchInput.value = '';
+            searchResults.innerHTML = '';
+          }
+          
+          searchCloseBtn.addEventListener('click', closeSearch);
+          
+          // Close on overlay click
+          searchOverlay.addEventListener('click', function(e) {
+            if (e.target === searchOverlay) {
+              closeSearch();
+            }
+          });
+          
+          // Close on escape key
+          document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape' && searchOverlay.style.display === 'flex') {
+              closeSearch();
+            }
+          });
+          
+          // Search functionality
+          let searchTimeout;
+          searchInput.addEventListener('input', function() {
+            const query = this.value.trim();
+            
+            clearTimeout(searchTimeout);
+            
+            if (query.length < 3) {
+              searchResults.innerHTML = '';
+              return;
+            }
+            
+            searchTimeout = setTimeout(() => {
+              fetch(`/articles/search?q=${encodeURIComponent(query)}`)
+                .then(response => response.json())
+                .then(articles => {
+                  if (articles.length === 0) {
+                    searchResults.innerHTML = '<div class="search-no-results">No articles found</div>';
+                    return;
+                  }
+                  
+                  searchResults.innerHTML = articles.map(article => `
+                    <a href="/articles/${article.id}" class="search-result-item">
+                      <div class="search-result-title">${article.title}</div>
+                      <div class="search-result-meta">${article.created_at}</div>
+                    </a>
+                  `).join('');
+                })
+                .catch(error => {
+                  searchResults.innerHTML = '<div class="search-no-results">Error searching articles</div>';
+                });
+            }, 300);
+          });
+        });
+      </script>
+    <% end %>
   </body>
 </html>
