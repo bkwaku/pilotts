@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class SessionsController < ApplicationController
   include Authentication
   allow_unauthenticated_access only: %i[ new create ]

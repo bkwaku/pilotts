@@ -1,10 +1,12 @@
+# frozen_string_literal: true
+
 require 'rails_helper'
 
 RSpec.describe Setting, type: :model do
   describe 'validations' do
     it { should validate_presence_of(:contact_email) }
     it { should validate_presence_of(:blog_name) }
-    
+
     it 'validates email format' do
       setting = build(:setting, contact_email: 'invalid-email')
       expect(setting).not_to be_valid

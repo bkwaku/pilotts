@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Admin::SettingsController < ApplicationController
   include Authentication
   before_action :require_authentication

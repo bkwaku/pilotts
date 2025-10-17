@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Api::Admin::ArticlesController < ApplicationController
   include Authentication
   before_action :require_authentication

@@ -68,7 +68,7 @@ group :test do
   # Use system testing [https://guides.rubyonrails.org/testing.html#system-testing]
   gem "capybara"
   gem "selenium-webdriver"
-  
+
   # RSpec testing tools
   gem "shoulda-matchers", "~> 6.0"
   gem "database_cleaner-active_record", "~> 2.1"

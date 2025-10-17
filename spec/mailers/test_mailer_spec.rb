@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'rails_helper'
 
 RSpec.describe TestMailer, type: :mailer do
@@ -10,11 +12,11 @@ RSpec.describe TestMailer, type: :mailer do
     end
 
     it 'renders the receiver email' do
-      expect(mail.to).to eq([recipient])
+      expect(mail.to).to eq([ recipient ])
     end
 
     it 'renders the sender email' do
-      expect(mail.from).to eq(['from@example.com'])
+      expect(mail.from).to eq([ 'from@example.com' ])
     end
 
     it 'includes the app name in the body' do

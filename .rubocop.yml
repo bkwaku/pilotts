@@ -1,8 +1,227 @@
 # Omakase Ruby styling for Rails
-inherit_gem: { rubocop-rails-omakase: rubocop.yml }
+inherit_gem:
+  rubocop-rails-omakase: rubocop.yml
 
 # Overwrite or add rules to create your own house style
 #
 # # Use `[a, [b, c]]` not `[ a, [ b, c ] ]`
 # Layout/SpaceInsideArrayLiteralBrackets:
 #   Enabled: false
+Layout/ParameterAlignment:
+  Description: >-
+    Align the parameters of a method call if they span more
+      than one line.
+  EnforcedStyle: with_first_parameter
+
+Layout/ArgumentAlignment:
+  Description: >-
+    Check if the arguments on a multi-line method definition are aligned.
+  EnforcedStyle: with_first_argument
+
+Layout/MultilineMethodCallIndentation:
+  Description: >-
+    Checks indentation of method calls with the dot operator
+    that span more than one line.
+  EnforcedStyle: indented
+  IndentationWidth: 2
+
+Layout/MultilineOperationIndentation:
+  Description: >-
+    Checks indentation of binary operations that span more than
+    one line.
+  EnforcedStyle: indented
+  IndentationWidth: 2
+
+Layout/LineLength:
+  Description: 'Limit lines to 120 characters.'
+  StyleGuide: 'https://github.com/bbatsov/ruby-style-guide#80-character-limits'
+  Max: 120
+
+Metrics/AbcSize:
+  Description: >-
+    A calculated magnitude based on number of assignments,
+    branches, and conditions.
+  Reference: 'http://c2.com/cgi/wiki?AbcMetric'
+  Max: 20
+
+Metrics/BlockLength:
+  Description: 'Avoid long blocks with many lines.'
+  Enabled: false
+
+Metrics/ClassLength:
+  Description: 'Avoid long classes with many lines.'
+  Enabled: false
+
+Metrics/ModuleLength:
+  Enabled: false
+
+Metrics/ParameterLists:
+  CountKeywordArgs: false
+  Enabled: true
+  Max: 5
+  Exclude:
+    - app/workers/**/*
+
+Metrics/CyclomaticComplexity:
+  Description: >-
+    A complexity metric that is strongly correlated to the number
+    of test cases needed to validate a method.
+  Max: 10
+
+# Disable Method Length. Rely on the complexity cops to ensure code maintainability.
+Metrics/MethodLength:
+  Description: 'Avoid methods longer than 10 lines of code.'
+  StyleGuide: 'https://github.com/bbatsov/ruby-style-guide#short-methods'
+  Max: 15
+  Enabled: false
+
+Metrics/PerceivedComplexity:
+  Description: >-
+    A complexity metric geared towards measuring complexity for a
+    human reader.
+  Max: 10
+
+Style/Documentation:
+  Description: 'Document classes and non-namespace modules.'
+  Enabled: false
+
+Style/FrozenStringLiteralComment:
+  Description: >-
+    Add the frozen_string_literal comment to the top of files
+    to help transition from Ruby 2.3.0 to Ruby 3.0.
+  EnforcedStyle: always
+
+Style/HashSyntax:
+  Description: >-
+    Prefer Ruby 1.9 hash syntax { a: 1, b: 2 } over 1.8 syntax
+    { :a => 1, :b => 2 }.
+    Forbids mixed key syntaxes (e.g. {a: 1, :b => 2})
+  EnforcedStyle: ruby19_no_mixed_keys
+
+Layout/EmptyLinesAroundAttributeAccessor:
+  Enabled: true
+Layout/SpaceAroundMethodCallOperator:
+  Enabled: true
+Lint/RaiseException:
+  Enabled: true
+Lint/StructNewOverride:
+  Enabled: true
+Style/ExponentialNotation:
+  Enabled: true
+Style/HashEachMethods:
+  Enabled: false
+Style/HashTransformKeys:
+  Enabled: false
+Style/HashTransformValues:
+  Enabled: false
+Style/SlicingWithRange:
+  Enabled: false
+
+Lint/DeprecatedOpenSSLConstant:
+  Enabled: true
+Lint/MixedRegexpCaptureTypes:
+  Enabled: true
+Lint/AmbiguousAssignment:
+  Enabled: true
+Lint/DeprecatedConstants:
+  Enabled: true
+Lint/DuplicateBranch:
+  Enabled: true
+Lint/DuplicateRegexpCharacterClassElement:
+  Enabled: true
+Lint/EmptyBlock:
+  Enabled: true
+Lint/EmptyClass:
+  Enabled: true
+Lint/EmptyInPattern:
+  Enabled: true
+Lint/LambdaWithoutLiteralBlock:
+  Enabled: true
+Lint/NoReturnInBeginEndBlocks:
+  Enabled: true
+Lint/NumberedParameterAssignment:
+  Enabled: true
+Lint/OrAssignmentToConstant:
+  Enabled: true
+Lint/RedundantDirGlobSort:
+  Enabled: true
+Lint/SymbolConversion:
+  Enabled: true
+Lint/ToEnumArguments:
+  Enabled: true
+Lint/TripleQuotes:
+  Enabled: true
+Lint/UnexpectedBlockArity:
+  Enabled: true
+Lint/UnmodifiedReduceAccumulator:
+  Enabled: true
+Style/ArgumentsForwarding:
+  Enabled: true
+Style/CollectionCompact:
+  Enabled: true
+Style/DocumentDynamicEvalDefinition:
+  Enabled: true
+Style/EndlessMethod:
+  Enabled: true
+  EnforcedStyle: allow_always
+Style/HashConversion:
+  Enabled: true
+Style/HashExcept:
+  Enabled: true
+Style/IfWithBooleanLiteralBranches:
+  Enabled: true
+Style/InPatternThen:
+  Enabled: true
+Style/MultilineInPatternThen:
+  Enabled: true
+Style/NegatedIfElseCondition:
+  Enabled: true
+Style/NilLambda:
+  Enabled: true
+Style/QuotedSymbols:
+  Enabled: true
+Style/RedundantArgument:
+  Enabled: true
+Style/StringChars:
+  Enabled: true
+Style/SwapValues:
+  Enabled: true
+Style/RedundantFetchBlock:
+  Enabled: true
+Style/RedundantRegexpCharacterClass:
+  Enabled: true
+Style/RedundantRegexpEscape:
+  Enabled: true
+Style/DisableCopsWithinSourceCodeDirective:
+  Enabled: true
+  AllowedCops: [
+      Lint/RedundantCopDisableDirective, Layout/LineLength, Metrics/AbcSize, RSpec/AnyInstance, Api/PunditAuthorizeCheck
+  ]
+Style/RegexpLiteral:
+  EnforcedStyle: mixed
+
+Naming/VariableNumber:
+  Enabled: false
+
+Gemspec/DeprecatedAttributeAssignment:
+  Enabled: true
+
+Layout/SpaceBeforeBrackets:
+  Enabled: true
+
+Naming/PredicatePrefix:
+  Enabled: false
+
+AllCops:
+  SuggestExtensions: false
+  NewCops: disable
+  Exclude:
+    - bin/**/*
+    - db/data_schema.rb
+    - node_modules/**/*
+    - tmp/**/*
+    - Brewfile
+    - lib/scripts/**/*
+    - lib/tasks/**/*
+
+

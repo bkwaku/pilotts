@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Articles::ReadingTimeCalculator
   WORDS_PER_MINUTE = 200
 

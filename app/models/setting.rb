@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Setting < ApplicationRecord
   validates :contact_email, presence: true, format: { with: URI::MailTo::EMAIL_REGEXP }
   validates :blog_name, presence: true

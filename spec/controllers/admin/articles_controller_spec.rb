@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'rails_helper'
 
 RSpec.describe Admin::ArticlesController, type: :controller do
@@ -20,7 +22,7 @@ RSpec.describe Admin::ArticlesController, type: :controller do
 
     it 'assigns all articles by default' do
       get :index
-      expect(assigns(:articles)).to match_array([published_article, draft_article, archived_article])
+      expect(assigns(:articles)).to match_array([ published_article, draft_article, archived_article ])
     end
 
     context 'with published filter' do
@@ -71,7 +73,7 @@ RSpec.describe Admin::ArticlesController, type: :controller do
       expect {
         get :new
       }.to change(Article, :count).by(1)
-      
+
       expect(response).to redirect_to(edit_admin_article_path(Article.last))
     end
 

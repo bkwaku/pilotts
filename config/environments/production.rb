@@ -62,13 +62,13 @@ Rails.application.configure do
     port: ENV.fetch("SMTP_PORT", 587).to_i,
     user_name: ENV.fetch("SMTP_USER_NAME"),
     domain: ENV.fetch("SMTP_DOMAIN"),
-    password: ENV['SENDGRID_API_KEY'],
+    password: ENV["SENDGRID_API_KEY"],
     authentication: :plain,
     enable_starttls_auto: true
   }
 
-  config.action_mailer.default_url_options = { host: ENV['MAILER_DEFAULT_HOST'], port: 3000 }
-  
+  config.action_mailer.default_url_options = { host: ENV["MAILER_DEFAULT_HOST"], port: 3000 }
+
   # Default from email
   config.action_mailer.default_options = {
     from: ENV.fetch("MAILER_FROM_EMAIL", "noreply@example.com")

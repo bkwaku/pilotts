@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'rails_helper'
 
 RSpec.describe Article, type: :model do
@@ -95,7 +97,7 @@ RSpec.describe Article, type: :model do
     it 'does not change published_at if already published' do
       article.update(status: 'published')
       original_time = article.published_at
-      
+
       article.update(title: 'New Title')
       expect(article.published_at).to eq(original_time)
     end
@@ -103,7 +105,7 @@ RSpec.describe Article, type: :model do
     it 'clears published_at when status changes from published' do
       article.update(status: 'published')
       expect(article.published_at).to be_present
-      
+
       article.update(status: 'draft')
       expect(article.published_at).to be_nil
     end

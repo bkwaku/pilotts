@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'rails_helper'
 
 RSpec.describe ArticlesController, type: :controller do
@@ -42,7 +44,7 @@ RSpec.describe ArticlesController, type: :controller do
     it 'returns matching articles as JSON' do
       get :search, params: { q: 'Searchable' }, format: :json
       expect(response).to be_successful
-      
+
       json_response = JSON.parse(response.body)
       expect(json_response.length).to eq(1)
       expect(json_response.first['title']).to eq('Searchable Title')
@@ -51,14 +53,14 @@ RSpec.describe ArticlesController, type: :controller do
     it 'returns empty array for no matches' do
       get :search, params: { q: 'NonexistentTitle' }, format: :json
       expect(response).to be_successful
-      
+
       json_response = JSON.parse(response.body)
       expect(json_response).to be_empty
     end
 
     it 'limits results to 20 articles' do
       create_list(:article, 25, :published, user: user, title: 'Test Article')
-      
+
       get :search, params: { q: 'Test' }, format: :json
       json_response = JSON.parse(response.body)
       expect(json_response.length).to eq(20)

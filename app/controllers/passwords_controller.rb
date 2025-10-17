@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class PasswordsController < ApplicationController
   include Authentication
   allow_unauthenticated_access

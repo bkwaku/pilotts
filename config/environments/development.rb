@@ -57,10 +57,10 @@ Rails.application.configure do
   config.action_mailer.perform_caching = false
 
   # Set localhost to be used by links generated in mailer templates.
-  config.action_mailer.default_url_options = { 
+  config.action_mailer.default_url_options = {
     host: ENV.fetch("MAILER_DEFAULT_HOST", "localhost:3000")
   }
-  
+
   # Default from email
   config.action_mailer.default_options = {
     from: ENV.fetch("MAILER_FROM_EMAIL", "noreply@pilotts.com")

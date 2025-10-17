@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Articles::ExcerptGeneration
   DEFAULT_SENTENCE_COUNT = 2
   FALLBACK_LENGTH = 150

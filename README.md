@@ -156,6 +156,59 @@ open coverage/index.html
 
 📖 **Detailed testing guide**: See [docs/TESTING.md](docs/TESTING.md) for writing and running tests.
 
+## Code Quality & Linting
+
+Pilotts uses **RuboCop** with the [rubocop-rails-omakase](https://github.com/rails/rubocop-rails-omakase) configuration for maintaining consistent Ruby code style. Omakase is the default Rails style guide that comes with Rails 8.
+
+### Running RuboCop
+
+```bash
+# Run RuboCop on all files
+docker compose run --rm web bundle exec rubocop
+
+# Auto-correct safe offenses
+docker compose run --rm web bundle exec rubocop -a
+
+# Auto-correct all offenses (including unsafe)
+docker compose run --rm web bundle exec rubocop -A
+
+# Run on specific files or directories
+docker compose run --rm web bundle exec rubocop app/models
+docker compose run --rm web bundle exec rubocop app/controllers/articles_controller.rb
+```
+
+### Using Make Commands
+
+```bash
+make rubocop            # Run RuboCop
+make rubocop-fix        # Auto-fix offenses
+```
+
+### Adding Frozen String Literals
+
+All Ruby files should have `# frozen_string_literal: true` at the top. To add them automatically:
+
+```bash
+# Using RuboCop auto-correct (recommended)
+docker compose run --rm web bundle exec rubocop -A
+
+# Or using the provided script
+docker compose exec web ./script/add_frozen_string_literal.sh
+```
+
+📖 **More details**: See [docs/FROZEN_STRING_LITERALS.md](docs/FROZEN_STRING_LITERALS.md) for more information.
+
+### RuboCop Configuration
+
+The project uses **rubocop-rails-omakase** as the base configuration, which includes:
+- Rails best practices
+- Modern Ruby style conventions  
+- Automatic code formatting rules
+
+You can override or add custom rules in `.rubocop.yml`. The Omakase configuration provides sensible defaults that work well for most Rails applications.
+
+📖 **About Omakase**: [rubocop-rails-omakase on GitHub](https://github.com/rails/rubocop-rails-omakase)
+
 ## Email Configuration
 
 Pilotts includes built-in email support with easy configuration through environment variables.
@@ -430,16 +483,6 @@ Future enhancements planned for Pilotts:
 - [Docker Documentation](https://docs.docker.com/)
 - [PostgreSQL Documentation](https://www.postgresql.org/docs/)
 - [Kamal Deployment Guide](https://kamal-deploy.org/)
-
-### Alternative Platforms
-- [Medium](https://medium.com/) - The platform Pilotts aims to replace
-- [Ghost](https://ghost.org/) - Another open source publishing platform
-- [WriteFreely](https://writefreely.org/) - Minimalist federated blogging platform
-
-### Self-Hosting Resources
-- [DigitalOcean App Platform](https://www.digitalocean.com/products/app-platform/)
-- [Heroku](https://www.heroku.com/) - Easy Rails deployment
-- [Railway](https://railway.app/) - Modern deployment platform
 
 ## License
 
